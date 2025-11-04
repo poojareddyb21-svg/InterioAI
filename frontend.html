@@ -1,0 +1,832 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <title>InterioAI - AI Interior Designer</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: #251e3b;
+            overflow-x: hidden;
+        }
+
+        /* ==================== WELCOME PAGE ==================== */
+        #welcomePage {
+            height: 100vh;
+            width: 100%;
+            background-image: url('https://ik.imagekit.io/InterioAI/welcomepage.png?updatedAt=1762237748675');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        #welcomePage::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.1);
+            z-index: 1;
+        }
+
+        .welcome-content {
+            position: relative;
+            z-index: 2;
+            text-align: center;
+            color: white;
+            animation: fadeInUp 0.8s ease-out;
+        }
+
+        .welcome-content p {
+            font-size: 1.8rem;
+            margin-bottom: 3rem;
+            font-weight: 500;
+            text-shadow: 4px 4px 12px rgba(0, 0, 0, 0.9);
+            -webkit-user-select: none;
+            user-select: none;
+        }
+
+        .enter-button {
+            padding: 1.5rem 4.8rem;
+            font-size: 1.6rem;
+            font-weight: 700;
+            border: none;
+            border-radius: 0.9rem;
+            background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
+            color: white;
+            cursor: pointer;
+            box-shadow: 0 12px 35px rgba(76, 175, 80, 1);
+            transition: all 0.3s ease;
+            -webkit-user-select: none;
+            user-select: none;
+            display: inline-block;
+        }
+
+        .enter-button:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 16px 40px rgba(76, 175, 80, 1);
+        }
+
+        .enter-button:active {
+            transform: translateY(-1px);
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        /* ==================== HEADER ==================== */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.5rem 2rem;
+            backdrop-filter: blur(15px);
+            background: rgba(5, 4, 4, 0.92);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            border-bottom: 3px solid #4CAF50;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        }
+
+        header h1 {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #e8f5e9;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+            -webkit-user-select: none;
+            user-select: none;
+        }
+
+        header nav button {
+            background: #ff6b6b;
+            border: none;
+            color: white;
+            padding: 0.7rem 1.5rem;
+            font-size: 1rem;
+            font-weight: 600;
+            border-radius: 0.6rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 10px rgba(255, 107, 107, 0.4);
+        }
+
+        header nav button:hover {
+            background: #ff5252;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(255, 107, 107, 0.6);
+        }
+
+        /* ==================== AUTH PAGE ==================== */
+        #authPage {
+            background-image: url('https://ik.imagekit.io/InterioAI/login%20page.jpeg?updatedAt=1762237145854');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            min-height: 100vh;
+        }
+
+        #authPage::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.3);
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        .auth-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: calc(100vh - 80px);
+            padding: 2rem;
+            position: relative;
+            z-index: 2;
+        }
+
+        .auth-card {
+            max-width: 420px;
+            width: 100%;
+            margin: 0;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 2.5rem;
+            border-radius: 1.5rem;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.25);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            backdrop-filter: blur(10px);
+        }
+
+        .auth-card h2 {
+            text-align: center;
+            margin-bottom: 2rem;
+            color: #251e3b;
+            font-size: 1.8rem;
+        }
+
+        .auth-card p {
+            text-align: center;
+            margin-top: 1.5rem;
+            color: #666;
+        }
+
+        .auth-card a {
+            color: #4CAF50;
+            text-decoration: none;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .auth-card a:hover {
+            text-decoration: underline;
+        }
+
+        /* ==================== CONTAINER - MAIN PAGE ==================== */
+        .container {
+            max-width: 100%;
+            width: 100%;
+            margin: 0;
+            padding: 2rem 1.5rem;
+            background-image: url('https://ik.imagekit.io/InterioAI/main%20page.jpeg?updatedAt=1762237161393');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            min-height: calc(100vh - 80px);
+            position: relative;
+        }
+
+        .container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(255, 255, 255, 0.7);
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        .container > * {
+            position: relative;
+            z-index: 1;
+            max-width: 1100px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        /* ==================== CARD ==================== */
+        .card {
+            background: white;
+            padding: 2.5rem;
+            border-radius: 1.5rem;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.12);
+            transition: all 0.3s ease;
+            margin-bottom: 2rem;
+            border: 1px solid rgba(76, 175, 80, 0.1);
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 30px 80px rgba(76, 175, 80, 0.15);
+        }
+
+        .card h2 {
+            color: #251e3b;
+            margin-bottom: 2rem;
+            font-size: 1.8rem;
+            text-align: center;
+        }
+
+        /* ==================== FORM ELEMENTS ==================== */
+        label {
+            display: block;
+            font-weight: 600;
+            color: #333;
+            margin-top: 0.8rem;
+            margin-bottom: 0.5rem;
+            font-size: 0.95rem;
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 0.9rem;
+            border: 2px solid #e0e0e0;
+            border-radius: 0.6rem;
+            margin-bottom: 1.2rem;
+            font-size: 1rem;
+            font-family: inherit;
+            transition: all 0.3s ease;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: #4CAF50;
+            box-shadow: 0 0 10px rgba(76, 175, 80, 0.3);
+            background: #f8fff8;
+        }
+
+        button {
+            width: 100%;
+            padding: 1rem;
+            border: none;
+            border-radius: 0.6rem;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            -webkit-user-select: none;
+            user-select: none;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
+            color: white;
+            box-shadow: 0 8px 20px rgba(76, 175, 80, 0.4);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 28px rgba(76, 175, 80, 0.6);
+        }
+
+        /* ==================== FLEX LAYOUT ==================== */
+        .flex {
+            display: flex;
+            gap: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .half {
+            flex: 1 1 calc(50% - 0.75rem);
+            min-width: 250px;
+        }
+
+        /* ==================== PALETTE ==================== */
+        .palette-container {
+            display: flex;
+            gap: 0.8rem;
+            flex-wrap: wrap;
+            margin-top: 1rem;
+            margin-bottom: 1.5rem;
+            align-items: center;
+        }
+
+        .palette-option {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            cursor: pointer;
+            border: 3px solid transparent;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .palette-option:hover {
+            transform: scale(1.15);
+            border-color: #4CAF50;
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        .palette-option.selected {
+            border-color: #4CAF50;
+            box-shadow: 0 0 0 4px rgba(76, 175, 80, 0.3);
+            transform: scale(1.2);
+        }
+
+        /* ==================== SLOGAN SECTION ==================== */
+        .slogan-section {
+            background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
+            padding: 3rem;
+            border-radius: 1.5rem;
+            text-align: center;
+            color: white;
+            margin-bottom: 2rem;
+            box-shadow: 0 15px 40px rgba(76, 175, 80, 0.3);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 300px;
+        }
+
+        .slogan-section h2 {
+            font-size: 2.5rem;
+            font-weight: 900;
+            margin-bottom: 1.5rem;
+            color: white;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        .slogan-section p {
+            font-size: 1.4rem;
+            font-weight: 600;
+            color: rgba(255, 255, 255, 0.95);
+            margin-bottom: 1.5rem;
+            line-height: 1.6;
+        }
+
+        .slogan-icon {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+        }
+
+        .architectural-pattern {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            opacity: 0.1;
+            font-size: 3rem;
+            overflow: hidden;
+        }
+
+        /* ==================== PREVIOUS DESIGNS ==================== */
+        .previous-designs {
+            margin-top: 3rem;
+            padding-top: 2rem;
+            border-top: 2px solid #e0e0e0;
+        }
+
+        .previous-designs h3 {
+            color: #251e3b;
+            margin-bottom: 1.5rem;
+            font-size: 1.4rem;
+        }
+
+        .previous-items {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .previous-item {
+            background: linear-gradient(135deg, #f5f7ff 0%, #fff0f5 100%);
+            padding: 1rem;
+            border-radius: 0.8rem;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+            transition: all 0.3s ease;
+            border: 1px solid rgba(76, 175, 80, 0.1);
+        }
+
+        .previous-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(76, 175, 80, 0.2);
+        }
+
+        .previous-item img {
+            width: 100%;
+            height: 180px;
+            object-fit: cover;
+            border-radius: 0.6rem;
+            margin-bottom: 0.8rem;
+        }
+
+        .previous-item strong {
+            color: #4CAF50;
+            display: block;
+            margin-bottom: 0.3rem;
+        }
+
+        .previous-item small {
+            color: #999;
+            display: block;
+            margin-bottom: 0.8rem;
+        }
+
+        .palette-preview {
+            display: inline-block;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            border: 2px solid #4CAF50;
+            margin-right: 0.5rem;
+        }
+
+        /* ==================== RESPONSIVE ==================== */
+        @media (max-width: 768px) {
+            header h1 {
+                font-size: 1.3rem;
+            }
+
+            .welcome-content p {
+                font-size: 1.4rem;
+            }
+
+            .enter-button {
+                padding: 1.1rem 2.8rem;
+                font-size: 1.2rem;
+            }
+
+            .half {
+                flex: 1 1 100%;
+                min-width: auto;
+            }
+
+            .slogan-section h2 {
+                font-size: 1.8rem;
+            }
+
+            .slogan-section p {
+                font-size: 1.1rem;
+            }
+
+            .slogan-icon {
+                font-size: 3rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            header {
+                padding: 1rem;
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            header h1 {
+                font-size: 1.2rem;
+            }
+
+            .welcome-content p {
+                font-size: 1.1rem;
+            }
+
+            .enter-button {
+                padding: 0.9rem 1.8rem;
+                font-size: 1rem;
+            }
+
+            .card {
+                padding: 1.2rem;
+            }
+
+            .card h2 {
+                font-size: 1.4rem;
+            }
+
+            .slogan-section {
+                padding: 2rem;
+                min-height: 250px;
+            }
+
+            .slogan-section h2 {
+                font-size: 1.5rem;
+            }
+
+            .slogan-section p {
+                font-size: 0.95rem;
+            }
+
+            .slogan-icon {
+                font-size: 2.5rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- ==================== WELCOME PAGE ==================== -->
+    <div id="welcomePage">
+        <div class="welcome-content">
+            <button class="enter-button" onclick="goToAuth()">Enter InterioAI</button>
+        </div>
+    </div>
+
+    <!-- ==================== AUTH PAGE ==================== -->
+    <div id="authPage" class="hidden">
+        <header>
+            <h1>🏡 InterioAI</h1>
+            <nav>
+                <button onclick="goToWelcome()">← Back</button>
+            </nav>
+        </header>
+
+        <div class="auth-container">
+            <!-- Login Form -->
+            <div class="auth-card" id="loginFormContainer">
+                <h2>Welcome Back 👋</h2>
+                <form id="loginForm" onsubmit="handleLogin(event)">
+                    <label>📧 Email Address</label>
+                    <input type="email" required placeholder="your@email.com">
+                    <label>🔐 Password</label>
+                    <input type="password" required placeholder="Enter your password">
+                    <button type="submit" class="btn-primary">🚀 Login</button>
+                </form>
+                <p>Don't have an account? <a onclick="toggleAuthForms()">Sign up here</a></p>
+            </div>
+
+            <!-- Signup Form -->
+            <div class="auth-card hidden" id="signupFormContainer">
+                <h2>Create Your Account ✨</h2>
+                <form id="signupForm" onsubmit="handleSignup(event)">
+                    <label>👤 Full Name</label>
+                    <input type="text" required placeholder="Your name">
+                    <label>📧 Email Address</label>
+                    <input type="email" required placeholder="your@email.com">
+                    <label>🔐 Password</label>
+                    <input type="password" required placeholder="Create a strong password">
+                    <button type="submit" class="btn-primary">✨ Create Account</button>
+                </form>
+                <p>Already have an account? <a onclick="toggleAuthForms()">Login here</a></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== DASHBOARD PAGE ==================== -->
+    <div id="dashboardPage" class="hidden">
+        <header>
+            <h1>🏡 InterioAI</h1>
+            <nav>
+                <button id="logoutBtn" onclick="goToWelcome()">🚪 Logout</button>
+            </nav>
+        </header>
+
+        <div class="container">
+            <!-- Slogan and Architectural Section -->
+            <div class="slogan-section">
+                <div class="slogan-icon">✨</div>
+                <h2>Design Your Dream Space</h2>
+                <p>"Every room tells a story. Let AI help you write yours with perfect designs, stunning styles, and spaces that inspire."</p>
+                <div class="architectural-pattern">🏗 📐 🏛 🏢 🏗 📐 🏛 🏢</div>
+            </div>
+
+            <!-- Design Form -->
+            <div class="card">
+                <h2>✨ Create Your Interior Design ✨</h2>
+                <form id="designForm" onsubmit="handleDesignSubmit(event)">
+                    <div class="flex">
+                        <div class="half">
+                            <label>🏠 Room Type</label>
+                            <select name="roomType" required>
+                                <option value="">-- Select Room --</option>
+                                <option value="Bedroom">🛏 Bedroom</option>
+                                <option value="Kitchen">🍳 Kitchen</option>
+                                <option value="Living Hall">🛋 Living Hall</option>
+                                <option value="Bathroom">🚿 Bathroom</option>
+                            </select>
+                        </div>
+                        <div class="half">
+                            <label>🎨 Interior Style</label>
+                            <select name="style" required>
+                                <option value="">-- Select Style --</option>
+                                <option value="Modern">🏙 Modern</option>
+                                <option value="Indian">🇮🇳 Indian</option>
+                                <option value="Minimalist">📦 Minimalist</option>
+                                <option value="Italian">🇮🇹 Italian</option>
+                                <option value="Scandinavian">❄ Scandinavian</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <label>📷 Upload Room Photo</label>
+                    <input type="file" accept="image/*" required>
+
+                    <div class="flex">
+                        <div class="half">
+                            <label>📏 Room Width (meters)</label>
+                            <select name="width" required>
+                                <option value="">-- Select --</option>
+                                <option value="5-8">5-8m</option>
+                                <option value="8-10">8-10m</option>
+                                <option value="10-12">10-12m</option>
+                                <option value="12+">12+m</option>
+                            </select>
+                        </div>
+                        <div class="half">
+                            <label>📏 Room Length (meters)</label>
+                            <select name="length" required>
+                                <option value="">-- Select --</option>
+                                <option value="5-8">5-8m</option>
+                                <option value="8-10">8-10m</option>
+                                <option value="10-12">10-12m</option>
+                                <option value="12+">12+m</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <label>🎨 Choose Color Palette</label>
+                    <div class="palette-container" id="paletteChoices">
+                        <span class="palette-option" style="background: #FFB6C1;" data-color="pink" title="Pink"></span>
+                        <span class="palette-option" style="background: #87CEEB;" data-color="lightblue" title="Light Blue"></span>
+                        <span class="palette-option" style="background: #90EE90;" data-color="lightgreen" title="Light Green"></span>
+                        <span class="palette-option" style="background: #E6E6FA;" data-color="lavender" title="Lavender"></span>
+                        <span class="palette-option" style="background: #FFD700;" data-color="yellow" title="Yellow"></span>
+                        <span class="palette-option" style="background: #FFA500;" data-color="orange" title="Orange"></span>
+                    </div>
+
+                    <label>🛋 Furniture Preferences</label>
+                    <textarea name="furniture" rows="3" placeholder="e.g., wooden bed, leather sofa, modern desk, bookshelf..."></textarea>
+
+                    <button type="submit" class="btn-primary">🌟 Generate Design ✨</button>
+                </form>
+
+                <!-- Previous Designs -->
+                <div class="previous-designs hidden" id="previousDesignsSection">
+                    <h3>📸 Your Previous Designs</h3>
+                    <div class="previous-items" id="previousDesigns"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ==================== PAGE NAVIGATION ====================
+        function goToWelcome() {
+            document.getElementById('welcomePage').classList.remove('hidden');
+            document.getElementById('authPage').classList.add('hidden');
+            document.getElementById('dashboardPage').classList.add('hidden');
+        }
+
+        function goToAuth() {
+            document.getElementById('welcomePage').classList.add('hidden');
+            document.getElementById('authPage').classList.remove('hidden');
+        }
+
+        function goToDashboard() {
+            document.getElementById('welcomePage').classList.add('hidden');
+            document.getElementById('authPage').classList.add('hidden');
+            document.getElementById('dashboardPage').classList.remove('hidden');
+            loadPreviousDesigns();
+        }
+
+        // ==================== AUTH FORMS ====================
+        function toggleAuthForms() {
+            document.getElementById('loginFormContainer').classList.toggle('hidden');
+            document.getElementById('signupFormContainer').classList.toggle('hidden');
+        }
+
+        function handleLogin(event) {
+            event.preventDefault();
+            goToDashboard();
+            document.getElementById('loginForm').reset();
+        }
+
+        function handleSignup(event) {
+            event.preventDefault();
+            goToDashboard();
+            document.getElementById('signupForm').reset();
+        }
+
+        // ==================== PALETTE SELECTION ====================
+        document.addEventListener('DOMContentLoaded', function() {
+            const paletteChoices = document.getElementById('paletteChoices');
+            if (paletteChoices) {
+                paletteChoices.addEventListener('click', (e) => {
+                    if (e.target.classList.contains('palette-option')) {
+                        document.querySelectorAll('.palette-option').forEach(opt => opt.classList.remove('selected'));
+                        e.target.classList.add('selected');
+                        document.querySelector('input[name="palette"]').value = e.target.dataset.color;
+                    }
+                });
+            }
+        });
+
+        // ==================== DESIGN FORM ====================
+        function handleDesignSubmit(event) {
+            event.preventDefault();
+            const formData = new FormData(event.target);
+            const roomType = formData.get('roomType');
+            const style = formData.get('style');
+            const palette = formData.get('palette');
+            const furniture = formData.get('furniture');
+            const width = formData.get('width');
+            const length = formData.get('length');
+
+            const photoInput = event.target.querySelector('input[type=file]');
+            if (photoInput.files.length === 0) {
+                alert('Please upload a photo');
+                return;
+            }
+
+            const previewURL = URL.createObjectURL(photoInput.files[0]);
+            const designData = {
+                roomType,
+                style,
+                palette,
+                furniture,
+                width,
+                length,
+                image: previewURL,
+                date: new Date().toLocaleString()
+            };
+
+            let saved = JSON.parse(localStorage.getItem('designs') || '[]');
+            saved.push(designData);
+            localStorage.setItem('designs', JSON.stringify(saved));
+            loadPreviousDesigns();
+            alert('✨ Design request submitted successfully!');
+            event.target.reset();
+            document.querySelectorAll('.palette-option').forEach(opt => opt.classList.remove('selected'));
+        }
+
+        // ==================== PREVIOUS DESIGNS ====================
+        function loadPreviousDesigns() {
+            const previousDesigns = document.getElementById('previousDesigns');
+            const previousDesignsSection = document.getElementById('previousDesignsSection');
+            previousDesigns.innerHTML = '';
+            let saved = JSON.parse(localStorage.getItem('designs') || '[]').reverse();
+            
+            if (saved.length === 0) {
+                previousDesignsSection.classList.add('hidden');
+                return;
+            }
+            
+            previousDesignsSection.classList.remove('hidden');
+            saved.forEach(d => {
+                const div = document.createElement('div');
+                div.className = 'previous-item';
+                div.innerHTML = `
+                    <img src="${d.image}" alt="design">
+                    <strong>${d.roomType} - ${d.style}</strong>
+                    <small>${d.date}</small>
+                    <div style="margin-top: 0.5rem;">
+                        <span class="palette-preview" style="background: ${d.palette};"></span>
+                        <span style="font-size: 0.85rem; color: #666;">${d.palette}</span>
+                    </div>
+                    <p style="font-size: 0.85rem; color: #555; margin-top: 0.8rem;">🛋 ${d.furniture}</p>
+                    <p style="font-size: 0.8rem; color: #999;">📏 ${d.width} x ${d.length}</p>
+                `;
+                previousDesigns.appendChild(div);
+            });
+        }
+    </script>
+</body>
+
+</html>
