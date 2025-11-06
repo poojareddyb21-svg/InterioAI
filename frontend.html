@@ -365,6 +365,55 @@
             transform: scale(1.2);
         }
 
+        /* ==================== CUSTOM COLOR SECTION ==================== */
+        .custom-color-section {
+            margin-top: 1rem;
+            padding: 1.2rem;
+            background: #f9f9f9;
+            border-radius: 0.6rem;
+            border: 2px dashed #e0e0e0;
+        }
+
+        .custom-color-section label {
+            display: block;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 0.8rem;
+            font-size: 0.95rem;
+        }
+
+        .custom-color-input-wrapper {
+            display: flex;
+            gap: 0.8rem;
+            align-items: center;
+        }
+
+        .custom-color-input-wrapper input[type="color"] {
+            width: 60px;
+            height: 45px;
+            padding: 2px;
+            cursor: pointer;
+            border: 2px solid #e0e0e0;
+            border-radius: 0.6rem;
+            margin-bottom: 0;
+        }
+
+        .custom-color-input-wrapper input[type="text"] {
+            flex: 1;
+            padding: 0.8rem;
+            border: 2px solid #e0e0e0;
+            border-radius: 0.6rem;
+            font-size: 0.95rem;
+            margin-bottom: 0;
+        }
+
+        .custom-color-input-wrapper input[type="text"]:focus {
+            outline: none;
+            border-color: #4CAF50;
+            box-shadow: 0 0 10px rgba(76, 175, 80, 0.3);
+            background: #f8fff8;
+        }
+
         /* ==================== SLOGAN SECTION ==================== */
         .slogan-section {
             background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
@@ -511,6 +560,14 @@
             .slogan-icon {
                 font-size: 3rem;
             }
+
+            .custom-color-input-wrapper {
+                flex-direction: column;
+            }
+
+            .custom-color-input-wrapper input[type="color"] {
+                width: 100%;
+            }
         }
 
         @media (max-width: 480px) {
@@ -556,6 +613,14 @@
 
             .slogan-icon {
                 font-size: 2.5rem;
+            }
+
+            .custom-color-input-wrapper {
+                flex-direction: column;
+            }
+
+            .custom-color-input-wrapper input[type="color"] {
+                width: 100%;
             }
         }
     </style>
@@ -624,7 +689,7 @@
                 <div class="slogan-icon">✨</div>
                 <h2>Design Your Dream Space</h2>
                 <p>"Every room tells a story. Let AI help you write yours with perfect designs, stunning styles, and spaces that inspire."</p>
-                <div class="architectural-pattern">🏗 📐 🏛 🏢 🏗 📐 🏛 🏢</div>
+                <div class="architectural-pattern">🏗️ 📐 🏛️ 🏢 🏗️ 📐 🏛️ 🏢</div>
             </div>
 
             <!-- Design Form -->
@@ -636,9 +701,9 @@
                             <label>🏠 Room Type</label>
                             <select name="roomType" required>
                                 <option value="">-- Select Room --</option>
-                                <option value="Bedroom">🛏 Bedroom</option>
+                                <option value="Bedroom">🛏️ Bedroom</option>
                                 <option value="Kitchen">🍳 Kitchen</option>
-                                <option value="Living Hall">🛋 Living Hall</option>
+                                <option value="Living Hall">🛋️ Living Hall</option>
                                 <option value="Bathroom">🚿 Bathroom</option>
                             </select>
                         </div>
@@ -646,11 +711,11 @@
                             <label>🎨 Interior Style</label>
                             <select name="style" required>
                                 <option value="">-- Select Style --</option>
-                                <option value="Modern">🏙 Modern</option>
+                                <option value="Modern">🏙️ Modern</option>
                                 <option value="Indian">🇮🇳 Indian</option>
                                 <option value="Minimalist">📦 Minimalist</option>
                                 <option value="Italian">🇮🇹 Italian</option>
-                                <option value="Scandinavian">❄ Scandinavian</option>
+                                <option value="Scandinavian">❄️ Scandinavian</option>
                             </select>
                         </div>
                     </div>
@@ -691,7 +756,15 @@
                         <span class="palette-option" style="background: #FFA500;" data-color="orange" title="Orange"></span>
                     </div>
 
-                    <label>🛋 Furniture Preferences</label>
+                    <div class="custom-color-section">
+                        <label>Or Choose Your Own Color</label>
+                        <div class="custom-color-input-wrapper">
+                            <input type="color" id="customColor" name="customColor" value="#4CAF50">
+                            <input type="text" id="customColorName" name="customColorName" placeholder="Color name (optional)">
+                        </div>
+                    </div>
+
+                    <label>🛋️ Furniture Preferences</label>
                     <textarea name="furniture" rows="3" placeholder="e.g., wooden bed, leather sofa, modern desk, bookshelf..."></textarea>
 
                     <button type="submit" class="btn-primary">🌟 Generate Design ✨</button>
@@ -756,6 +829,12 @@
                     }
                 });
             }
+
+            // Custom color input
+            document.getElementById('customColor').addEventListener('input', function() {
+                document.querySelectorAll('.palette-option').forEach(opt => opt.classList.remove('selected'));
+                document.querySelector('input[name="palette"]').value = this.value;
+            });
         });
 
         // ==================== DESIGN FORM ====================
@@ -820,7 +899,7 @@
                         <span class="palette-preview" style="background: ${d.palette};"></span>
                         <span style="font-size: 0.85rem; color: #666;">${d.palette}</span>
                     </div>
-                    <p style="font-size: 0.85rem; color: #555; margin-top: 0.8rem;">🛋 ${d.furniture}</p>
+                    <p style="font-size: 0.85rem; color: #555; margin-top: 0.8rem;">🛋️ ${d.furniture}</p>
                     <p style="font-size: 0.8rem; color: #999;">📏 ${d.width} x ${d.length}</p>
                 `;
                 previousDesigns.appendChild(div);
